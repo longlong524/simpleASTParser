@@ -97,8 +97,10 @@ public class ParseProjects {
  }
 
 	private static void parseMethodInvoc(char[] arr, String infile_name){
+		VarDeclarationASTVisitor.VARLiterals.clear();
 		VarDeclarationASTVisitor astv = new VarDeclarationASTVisitor(arr, infile_name);
 		astv.parse();
+		
 	}
 	
 	private static void parse(char[] arr, String infile_name){

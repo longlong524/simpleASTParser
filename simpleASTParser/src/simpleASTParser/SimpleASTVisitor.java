@@ -164,6 +164,11 @@ public class SimpleASTVisitor extends ASTVisitor{
 		boolean ff=true;
 		for (SingleVariableDeclaration p : params) {
 			varNames += p.getName() + " ";
+			result=result.replace(p.getName().toString(), p.getType().toString());
+			
+			result=result.replace(p.getType().toString()+" "+p.getType().toString(), p.getType().toString());
+			result=result.replace(p.getType().toString()+"  "+p.getType().toString(), p.getType().toString());
+			result=result.replace(p.getType().toString()+"   "+p.getType().toString(), p.getType().toString());
 			if(!ff){
 					//result+=(",");	
 			}
@@ -173,7 +178,14 @@ public class SimpleASTVisitor extends ASTVisitor{
 			
 			
 		}
-		
+		for(String key:VarDeclarationASTVisitor.VARLiterals.keySet()){
+			String v=VarDeclarationASTVisitor.VARLiterals.get(key);
+			result=result.replace(key, v);
+			
+			result=result.replace(v+" "+v, v);
+			result=result.replace(v+"  "+v, v);
+			result=result.replace(v+"   "+v, v);
+		}
 		/*Block block=node.getBody();
 		if(block!=null){
 			result+=(block.toString());
@@ -186,7 +198,8 @@ public class SimpleASTVisitor extends ASTVisitor{
 		}*/
 		
 		try {
-			result=result.replace(";", " ");
+			result=result.replaceAll("/\\*{1,2}[\\s\\S]*?\\*/", "");
+			result=result.replaceAll("//[\\s\\S]*?\n", "");
 			result=result.replace("\r\n", " ");
 			result=result.replace("\r", " ");
 			result=result.replace("\n", " ")+"\r\n";
