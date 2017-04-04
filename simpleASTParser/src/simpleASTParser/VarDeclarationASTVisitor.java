@@ -8,7 +8,10 @@ import java.util.Map;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.ASTVisitor;
+import org.eclipse.jdt.core.dom.BooleanLiteral;
+import org.eclipse.jdt.core.dom.CharacterLiteral;
 import org.eclipse.jdt.core.dom.CompilationUnit;
+import org.eclipse.jdt.core.dom.EnumConstantDeclaration;
 import org.eclipse.jdt.core.dom.FieldAccess;
 import org.eclipse.jdt.core.dom.FieldDeclaration;
 import org.eclipse.jdt.core.dom.LabeledStatement;
@@ -28,9 +31,11 @@ import org.eclipse.jface.text.projection.Fragment;
 public class VarDeclarationASTVisitor extends ASTVisitor{
 	
 	public static List<String> StringLiterals=new LinkedList<String>();
+	public static List<Character> CharacterLiterals=new LinkedList<Character>();
 	public static List<String> NumLiterals=new LinkedList<String>();
 	
 	public static Map<String,String> VARLiterals=new HashMap<String,String>();
+	public static List<String> SuperFields=new LinkedList<String>();
 	
 	private final CompilationUnit cu;
 	private String filename;
@@ -65,6 +70,7 @@ public class VarDeclarationASTVisitor extends ASTVisitor{
 		return true;
 	}
 
+
 	@Override
 	public boolean visit(StringLiteral node) {
 		StringLiterals.add(node.getLiteralValue());
@@ -89,19 +95,16 @@ public class VarDeclarationASTVisitor extends ASTVisitor{
 	
 	@Override
 	public boolean visit(SuperFieldAccess node) {
-
+		SuperFields.add(node.getName().toString());
 		return true;
 	}
 
-	@Override
-	public boolean visit(FieldAccess node) {
 
-		return true;
-	}
 
 	@Override
 	public boolean visit(FieldDeclaration node) {
 		
+		@SuppressWarnings("unchecked")
 		List<VariableDeclarationFragment> ffs=node.fragments();
 		for(VariableDeclarationFragment f:ffs){
 			System.err.println(f.getName().toString()+" :: "+node.getType().toString());
@@ -121,6 +124,19 @@ public class VarDeclarationASTVisitor extends ASTVisitor{
 	}
 	
 	
+	@Override
+	public boolean visit(CharacterLiteral node) {
+		// TODO Auto-generated method stub
+		CharacterLiterals.add(node.charValue());
+		return true;
+	}
+
+	@Override
+	public boolean visit(EnumConstantDeclaration node) {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
 	public void parse() {
 		cu.accept(this);
 	}

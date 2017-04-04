@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.jdt.core.dom.AST;
@@ -164,11 +165,9 @@ public class SimpleASTVisitor extends ASTVisitor{
 		boolean ff=true;
 		for (SingleVariableDeclaration p : params) {
 			varNames += p.getName() + " ";
-			result=result.replace(p.getName().toString(), p.getType().toString());
+			result=result.replace(p.getName().toString(), p.getType().toString()+"_VAR");
 			
-			result=result.replace(p.getType().toString()+" "+p.getType().toString(), p.getType().toString());
-			result=result.replace(p.getType().toString()+"  "+p.getType().toString(), p.getType().toString());
-			result=result.replace(p.getType().toString()+"   "+p.getType().toString(), p.getType().toString());
+			
 			if(!ff){
 					//result+=(",");	
 			}
@@ -180,12 +179,24 @@ public class SimpleASTVisitor extends ASTVisitor{
 		}
 		for(String key:VarDeclarationASTVisitor.VARLiterals.keySet()){
 			String v=VarDeclarationASTVisitor.VARLiterals.get(key);
-			result=result.replace(key, v);
-			
-			result=result.replace(v+" "+v, v);
-			result=result.replace(v+"  "+v, v);
-			result=result.replace(v+"   "+v, v);
+			result=result.replace(key, v+"_VAR");
 		}
+		for(String key:VarDeclarationASTVisitor.StringLiterals){
+			result=result.replace("\""+key+"\"", "String_Constant");
+		}
+		Collections.sort(VarDeclarationASTVisitor.NumLiterals);
+		for(int i=VarDeclarationASTVisitor.NumLiterals.size()-1;i>=0;i--){
+			result=result.replace(VarDeclarationASTVisitor.NumLiterals.get(i)+"", "Number_Constant");
+		}
+		result=result.replace("true", "Boolean_Constant");
+		result=result.replace("false", "Boolean_Constant");
+		for(Character key:VarDeclarationASTVisitor.CharacterLiterals){
+			result=result.replace("'"+key+"'", "Character_Constant");
+		}
+		for(String key:VarDeclarationASTVisitor.SuperFields){
+			result=result.replace(""+key+"", "VAR");
+		}
+
 		/*Block block=node.getBody();
 		if(block!=null){
 			result+=(block.toString());

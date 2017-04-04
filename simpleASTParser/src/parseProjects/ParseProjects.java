@@ -2,6 +2,7 @@ package parseProjects;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Scanner;
 
@@ -24,7 +25,8 @@ public class ParseProjects {
 		
 	   System.out.println("Parsing directorty " + mainDir 
 			   + " with depth " + dirDepth); 
-	   
+	   FileOutputStream ooo=new FileOutputStream("ooo");
+	   ooo.close();
 	   if(dirDepth == 1) {
 		   parseProjects(mainDir);
 	   }
@@ -98,6 +100,10 @@ public class ParseProjects {
 
 	private static void parseMethodInvoc(char[] arr, String infile_name){
 		VarDeclarationASTVisitor.VARLiterals.clear();
+		VarDeclarationASTVisitor.StringLiterals.clear();
+		VarDeclarationASTVisitor.NumLiterals.clear();
+		VarDeclarationASTVisitor.CharacterLiterals.clear();
+		VarDeclarationASTVisitor.SuperFields.clear();
 		VarDeclarationASTVisitor astv = new VarDeclarationASTVisitor(arr, infile_name);
 		astv.parse();
 		
